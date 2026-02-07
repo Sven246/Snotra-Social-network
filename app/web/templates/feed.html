@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Лента</h2>
+
+<div id="feed"></div>
+
+<script>
+fetch("/api/v1/posts/feed")
+    .then(r => r.json())
+    .then(data => {
+        const feed = document.getElementById("feed");
+
+        data.forEach(item => {
+            if (item.is_ad) {
+                feed.innerHTML += `
+                    <div class="ad-block">
+                        <h3>${item.title}</h3>
+                        ${item.image_url ? `<img src="${item.image_url}" class="ad-img">` : ""}
+                        <a href="${item.link}" target="_blank">Перейти</a>
+                    </div>
+                `;
+            } else {
+                feed.innerHTML += `
+                    <div class="post">
+                        <p>${item.content}</p>
+                    </div>
+                `;
+            }
+        });
+    });
+</script>
+{% endblock %}
