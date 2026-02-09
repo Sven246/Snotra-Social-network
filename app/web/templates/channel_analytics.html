@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Аналитика канала</h2>
+
+<div class="analytics-card">
+    <p><strong>Всего просмотров:</strong> {{ total_views }}</p>
+    <p><strong>Уникальных зрителей:</strong> {{ unique_viewers }}</p>
+</div>
+
+<h3>Посты</h3>
+<div id="posts"></div>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    fetch("/api/v1/channels/{{ channel.id }}/posts")
+        .then(r => r.json())
+        .then(data => {
+            const box = document.getElementById("posts");
+
+            data.forEach(p => {
+                box.innerHTML += `
+                    <div class="post">
+                        <p>${p.content}</p>
+                        <a class="btn" href="/channels/{{ channel.id }}/post/${p.id}">Открыть</a>
+                    </div>
+                `;
+            });
+        });
+});
+</script>
+
+<style>
+.analytics-card {
+    background: var(--card);
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    margin-bottom: 20px;
+}
+</style>
+
+{% endblock %}
