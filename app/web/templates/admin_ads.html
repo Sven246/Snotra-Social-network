@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Управление рекламой</h2>
+
+<div class="ad-form">
+    <input id="title" placeholder="Заголовок">
+    <input id="image_url" placeholder="URL изображения">
+    <input id="link" placeholder="Ссылка">
+    <button class="btn" onclick="createAd()">Создать</button>
+</div>
+
+<hr>
+
+<h3>Активная реклама</h3>
+<div id="ads"></div>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    fetch("/api/v1/ads/list")
+        .then(r => r.json())
+        .then(data => {
+            const box = document.getElementById("ads");
+
+            data.forEach(ad => {
+                box.innerHTML += `
+                    <div class="ad-block">
+                        <h3>${ad.title}</h3>
+                        <img src="${ad.image_url}" class="ad-img">
+                        <a href="${ad.link}" target="_blank">Перейти</a>
+                    </div>
+                `;
+            });
+        });
+});
+
+function createAd() {
+    fetch("/api/v1/ads/create", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+            title: document.getElementById("title").value,
+            image_url: document.getElementById("image_url").value,
+            link: document.getElementById("link").value
+        })
+    })
+    .then(r => r.json())
+    .then(() => location.reload());
+}
+</script>
+
+<style>
+.ad-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background: var(--card);
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+}
+
+.ad-form input {
+    padding: 8px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    color: var(--text);
+}
+</style>
+
+{% endblock %}
