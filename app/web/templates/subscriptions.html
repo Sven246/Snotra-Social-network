@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Мои подписки</h2>
+
+<div id="subs"></div>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    fetch("/api/v1/channels/subscriptions")
+        .then(r => r.json())
+        .then(data => {
+            const box = document.getElementById("subs");
+
+            data.forEach(ch => {
+                box.innerHTML += `
+                    <div class="channel">
+                        <h3>${ch.title}</h3>
+                        <p>${ch.description}</p>
+                        <a class="btn" href="/channels/${ch.id}">Открыть</a>
+                    </div>
+                `;
+            });
+        });
+});
+</script>
+
+{% endblock %}
