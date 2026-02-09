@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>История активности</h2>
+
+<div id="activity"></div>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    fetch("/api/v1/security/activity")
+        .then(r => r.json())
+        .then(data => {
+            const box = document.getElementById("activity");
+
+            data.forEach(a => {
+                box.innerHTML += `
+                    <div class="post">
+                        <p>${a.action}</p>
+                        <small>${a.time}</small>
+                    </div>
+                `;
+            });
+        });
+});
+</script>
+
+{% endblock %}
