@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Сохранённые посты</h2>
+
+<div id="posts"></div>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    fetch("/api/v1/bookmarks/posts")
+        .then(r => r.json())
+        .then(data => {
+            const box = document.getElementById("posts");
+
+            data.forEach(p => {
+                box.innerHTML += `
+                    <div class="post">
+                        <p>${p.content}</p>
+                        <small>${p.created_at}</small>
+                        <a class="btn" href="/posts/${p.id}">Открыть</a>
+                    </div>
+                `;
+            });
+        });
+});
+</script>
+
+{% endblock %}
