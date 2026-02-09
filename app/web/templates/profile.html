@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Профиль</h2>
+
+<div class="profile-card">
+    <h3>{{ user.username }}</h3>
+
+    <p><strong>Email:</strong> {{ user.email }}</p>
+
+    <p><strong>Монеты:</strong> {{ user.coins_balance }}</p>
+
+    {% if user.is_premium %}
+        <p class="premium-active">
+            Премиум активен до {{ user.premium_expires_at.strftime("%Y-%m-%d %H:%M") }}
+        </p>
+    {% else %}
+        <p class="premium-inactive">
+            Премиум не активен
+        </p>
+        <a class="btn" href="/premium">Купить премиум</a>
+    {% endif %}
+
+    <hr>
+
+    <a class="btn" href="/logout">Выйти</a>
+</div>
+
+<style>
+.profile-card {
+    background: var(--card);
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+}
+
+.premium-active {
+    color: #4caf50;
+    font-weight: bold;
+}
+
+.premium-inactive {
+    color: #e53935;
+    font-weight: bold;
+}
+</style>
+
+{% endblock %}
