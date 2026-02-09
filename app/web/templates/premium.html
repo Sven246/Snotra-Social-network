@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Премиум</h2>
+
+<div class="premium-container">
+
+    <div class="premium-card">
+        <h3>30 дней</h3>
+        <p>Разблокирует сторис, отключает рекламу, даёт больше возможностей.</p>
+        <p class="price">Цена: 300 монет</p>
+        <button class="btn" onclick="buyPremium(30, 300)">Купить</button>
+    </div>
+
+    <div class="premium-card">
+        <h3>90 дней</h3>
+        <p>Выгоднее на 15%.</p>
+        <p class="price">Цена: 750 монет</p>
+        <button class="btn" onclick="buyPremium(90, 750)">Купить</button>
+    </div>
+
+    <div class="premium-card">
+        <h3>180 дней</h3>
+        <p>Экономия 25%.</p>
+        <p class="price">Цена: 1200 монет</p>
+        <button class="btn" onclick="buyPremium(180, 1200)">Купить</button>
+    </div>
+
+    <div class="premium-card">
+        <h3>1 год</h3>
+        <p>Максимальная выгода — экономия 40%.</p>
+        <p class="price">Цена: 1800 монет</p>
+        <button class="btn" onclick="buyPremium(365, 1800)">Купить</button>
+    </div>
+
+</div>
+
+<script>
+function buyPremium(days, price) {
+    fetch("/api/v1/premium/buy", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({days, price})
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (data.error) {
+            alert(data.error);
+        } else {
+            alert("Премиум активирован");
+            window.location.href = "/profile";
+        }
+    });
+}
+</script>
+
+<style>
+.premium-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 20px;
+}
+
+.premium-card {
+    background: var(--card);
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    text-align: center;
+}
+
+.price {
+    font-size: 18px;
+    font-weight: bold;
+    margin: 10px 0;
+}
+</style>
+
+{% endblock %}
