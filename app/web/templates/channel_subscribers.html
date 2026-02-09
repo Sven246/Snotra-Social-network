@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Подписчики канала</h2>
+
+<div id="subs"></div>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    fetch("/api/v1/channels/{{ channel.id }}/subscribers")
+        .then(r => r.json())
+        .then(data => {
+            const box = document.getElementById("subs");
+
+            data.forEach(s => {
+                box.innerHTML += `
+                    <div class="channel">
+                        <p>Пользователь: ${s.user_id}</p>
+                    </div>
+                `;
+            });
+        });
+});
+</script>
+
+{% endblock %}
