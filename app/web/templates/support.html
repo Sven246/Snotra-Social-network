@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Поддержка</h2>
+
+<div class="form-card">
+    <label>Тема</label>
+    <input id="title" type="text">
+
+    <label>Описание проблемы</label>
+    <textarea id="message"></textarea>
+
+    <button class="btn" onclick="createTicket()">Отправить</button>
+</div>
+
+<script>
+function createTicket() {
+    fetch("/api/v1/support/create", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+            title: document.getElementById("title").value,
+            message: document.getElementById("message").value
+        })
+    })
+    .then(() => {
+        alert("Тикет создан");
+        window.location.href = "/support/list";
+    });
+}
+</script>
+
+<style>
+.form-card {
+    background: var(--card);
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+</style>
+
+{% endblock %}
