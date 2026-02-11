@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Мои тикеты</h2>
+
+<div id="tickets"></div>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    fetch("/api/v1/support/list")
+        .then(r => r.json())
+        .then(data => {
+            const box = document.getElementById("tickets");
+
+            data.forEach(t => {
+                box.innerHTML += `
+                    <div class="post">
+                        <h3>${t.title}</h3>
+                        <p>Статус: ${t.status}</p>
+                        <a class="btn" href="/support/${t.id}">Открыть</a>
+                    </div>
+                `;
+            });
+        });
+});
+</script>
+
+{% endblock %}
