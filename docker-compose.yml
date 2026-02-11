@@ -1,0 +1,41 @@
+version: "3.9"
+
+services:
+  web:
+    build: .
+    restart: always
+    env_file: .env
+    depends_on:
+      - db
+      - redis
+    ports:
+      - "8000:8000"
+
+  db:
+    image: postgres:16
+    restart: always
+    environment:
+      POSTGRES_USER: xgram
+      POSTGRES_PASSWORD: xgram
+      POSTGRES_DB: xgram
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7
+    restart: always
+
+  nginx:
+    image: nginx:latest
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./app/static:/static
+    depends_on:
+      - web
+
+volumes:
+  pgdata:
