@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Чат с поддержкой</h2>
+
+<div id="chat" class="messages-box"></div>
+
+<div class="form-card">
+    <input id="text" type="text" placeholder="Сообщение">
+    <button class="btn" onclick="send()">Отправить</button>
+</div>
+
+<script>
+function load() {
+    fetch("/api/v1/support/chat")
+        .then(r => r.json())
+        .then(data => {
+            const box = document.getElementById("chat");
+            box.innerHTML = "";
+
+            data.forEach(m => {
+                box.innerHTML += `
+                    <div class="post">
+                        <p>${m.text}</p>
+                        <small>${m.created_at}</small>
+                    </div>
+                `;
+            });
+        });
+}
+
+function send() {
+    fetch("/api/v1/support/chat/send", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+            text: document.getElementById("text").value
+        })
+    })
+    .then(() => {
+        document.getElementById("text").value = "";
+        load();
+    });
+}
+
+document.addEventListener("DOMContentLoaded", load);
+</script>
+
+{% endblock %}
